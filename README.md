@@ -8,7 +8,7 @@ This repository contains a function node for [Node-RED](https://nodered.org/) wh
 
 Having the actual inference as a self-contained function node gives you the possibility to create your own user interface or even use it as part of an autonomous agent.
 
-*Warning*: this is a 13B model - use it only if you have at least 16GB of RAM, more is recommended.
+> **Warning: this is a 13B model - use it only if you have at least 16GB of RAM, more is recommended**
 
 > Nota bene: these flows do not contain the actual model. You will have to download your own copy from [HuggingFace](https://huggingface.co/Selyam/gpt4-x-alpaca-13b-native-4bit-128g/tree/main/gpt4-x-alpaca-13b-ggml-q4_1-from-gptq-4bit-128g).
 
