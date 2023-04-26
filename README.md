@@ -1,18 +1,21 @@
-# node-red-flow-alpaca #
+# node-red-flow-gpt4-x-alpaca #
 
-Node-RED Flow (and web page example) for the Alpaca AI model
+Node-RED Flow (and web page example) for the Alpaca GPT4 AI model
 
-This repository contains a function node for [Node-RED](https://nodered.org/) which can be used to run the [Stanford Alpaca model](https://github.com/tatsu-lab/stanford_alpaca) (a fine-tuned variant of the [LLaMA model](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/)) using [llama.cpp](https://github.com/ggerganov/llama.cpp) within a Node-RED flow. **Inference is done on the CPU** (without requiring any special hardware) and still completes within a few seconds on a reasonably powerful computer.
+This repository contains a function node for [Node-RED](https://nodered.org/) which can be used to run the Stanford Alpaca GPT4 model (a fine-tuned variant of the [LLaMA model](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/) trained with transcripts of GPT-4 sessions) using [llama.cpp](https://github.com/ggerganov/llama.cpp) within a Node-RED flow. **Inference is done on the CPU** (without requiring any special hardware) and still completes within a few seconds on a reasonably powerful computer.
 
-![Alpaca HTTP Flow](./Alpaca-HTTP-Flow.png)
+![GPT4-x-Alpaca HTTP Flow](./GPT4-x-Alpaca-HTTP-Flow.png)
 
 Having the actual inference as a self-contained function node gives you the possibility to create your own user interface or even use it as part of an autonomous agent.
 
-> Nota bene: these flows do not contain the actual model. You will have to download your own copy from [HuggingFace](https://huggingface.co/Sosaka/Alpaca-native-4bit-ggml/blob/main/ggml-alpaca-7b-q4.bin).
+*Warning*: this is a 13B model - use it only if you have at least 16GB of RAM, more is recommended.
+
+> Nota bene: these flows do not contain the actual model. You will have to download your own copy from [HuggingFace](https://huggingface.co/Selyam/gpt4-x-alpaca-13b-native-4bit-128g/tree/main/gpt4-x-alpaca-13b-ggml-q4_1-from-gptq-4bit-128g).
 
 If you like, you may also check out similar nodes and flows for other AI models as there are
 
 * [Meta AI LLaMA](https://github.com/rozek/node-red-flow-llama)
+* [Stanford Alpaca](https://github.com/rozek/node-red-flow-alpaca) (trained with GPT-3)
 * [Nomic AI GPT4All (filtered version)](https://github.com/rozek/node-red-flow-gpt4all-filtered)
 * [Nomic AI GPT4All (unfiltered version)](https://github.com/rozek/node-red-flow-gpt4all-unfiltered)
 * [Nomic AI GPT4All-J](https://github.com/rozek/node-red-flow-gpt4all-j)
@@ -32,15 +35,15 @@ Afterwards, rename `main` to `llama` and copy it into the subfolder `ai` you cre
 
 ### Preparing the Model ###
 
-Just download the model from [HuggingFace](https://huggingface.co/Sosaka/Alpaca-native-4bit-ggml/blob/main/ggml-alpaca-7b-q4.bin) - it already has the proper format.
+Just download the model from [HuggingFace](https://huggingface.co/Selyam/gpt4-x-alpaca-13b-native-4bit-128g/tree/main/gpt4-x-alpaca-13b-ggml-q4_1-from-gptq-4bit-128g) - it already has the proper format.
 
 > Nota bene: right now, the function node supports the 7B model only - but this may easily be changed in the function source
 
-Afterwards, move the file `ggml-alpaca-7b-q4.bin` into the same subfolder `ai` where you already placed the `llama` executable.
+Afterwards, rename the file `ggml-model-q4_1.bin` to `ggml-gpt4-x-alpaca-13b-q4_1.bin` and move (or copy) it into the same subfolder `ai` where you already placed the `llama` executable.
 
 ### Importing the Function Node ###
 
-Finally, open the Flow Editor of your Node-RED server and import the contents of [Alpaca-Function.json](./Alpaca-Function.json). After deploying your changes, you are ready to run Alpaca inferences directly from within Node-RED.
+Finally, open the Flow Editor of your Node-RED server and import the contents of [GPT4-x-Alpaca-Function.json](./GPT4-x-Alpaca-Function.json). After deploying your changes, you are ready to run Alpaca GPT4 inferences directly from within Node-RED.
 
 ## Usage ##
 
@@ -63,9 +66,9 @@ All properties (except the prompt itself) are optional. If given, they should be
 
 ## Example ##
 
-The file [Alpaca-HTTP-Endpoint.json](./Alpaca-HTTP-Endpoint.json) contains an example which uses the Alpaca function node to answer HTTP requests. The prompt itself and any inference parameters have to be passed as query parameters, the result of the inference will then be returned in the body of the HTTP response.
+The file [GPT4-x-Alpaca-HTTP-Endpoint.json](./GPT4-x-Alpaca-HTTP-Endpoint.json) contains an example which uses the GPT4-x-Alpaca function node to answer HTTP requests. The prompt itself and any inference parameters have to be passed as query parameters, the result of the inference will then be returned in the body of the HTTP response.
 
-> Nota bene: the screenshot from above shows a modified version of this flow including an authentication node from the author's [Node-RED Authorization Examples](https://github.com/rozek/node-red-authorization-examples), the flow in [Alpaca-HTTP-Endpoint.json](./Alpaca-HTTP-Endpoint.json) comes without any authentication.
+> Nota bene: the screenshot from above shows a modified version of this flow including an authentication node from the author's [Node-RED Authorization Examples](https://github.com/rozek/node-red-authorization-examples), the flow in [GPT4-x-Alpaca-HTTP-Endpoint.json](./GPT4-x-Alpaca-HTTP-Endpoint.json) comes without any authentication.
 
 The following parameters are supported (most of them will be copied into a `msg` property of the same name):
 
@@ -80,15 +83,15 @@ The following parameters are supported (most of them will be copied into a `msg`
 * `temperature` - will be copied into `msg.temperature`
 * `batches` - will be copied into `msg.batches`
 
-In order to install this flow, simply open the Flow Editor of your Node-RED server and import the contents of [Alpaca-HTTP-Endpoint.json](./Alpaca-HTTP-Endpoint.json)
+In order to install this flow, simply open the Flow Editor of your Node-RED server and import the contents of [GPT4-x-Alpaca-HTTP-Endpoint.json](./GPT4-x-Alpaca-HTTP-Endpoint.json)
 
 ### Web Page ###
 
-The file [Alpaca.html](./Alpaca.html) contains a trivial web page which can act as a user interface for the HTTP endpoint.
+The file [GPT4-x-Alpaca.html](./GPT4-x-Alpaca.html) contains a trivial web page which can act as a user interface for the HTTP endpoint.
 
-![Alpaca Screenshot](./Alpaca-Screenshot.png)
+![GPT4-x-Alpaca Screenshot](./GPT4-x-Alpaca-Screenshot.png)
 
-Ideally, this page should be served from the same Node-RED server that also accepts the HTTP requests for Alpaca, but this is not strictly necessary.
+Ideally, this page should be served from the same Node-RED server that also accepts the HTTP requests for Alpaca GPT4, but this is not strictly necessary.
 
 The input fields `Base URL`, `User Name` and `Password` can be used if web server and Node-RED server are at different locations: just enter the base URL of your Node-RED HTTP endpoint (without the trailing `alpaca`) and, if that server requires basic authentication, your user name and your password in the related input fields before you send your first prompt - otherwise, just leave all these fields empty.
 
